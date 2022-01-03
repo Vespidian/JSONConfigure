@@ -1,0 +1,90 @@
+Planning and specification for the json parser
+
+--- TYPES ---
+
+If a primitive has only integer character and a maximum of 1 '.' character it is a float
+
+Integers can only have numbers, no other character
+
+Anything else is a string
+
+Examples:
+	integer: 	[67820192, 50, 7]
+
+	float: 		[3, 3.0, 5.391, 41293.4312]
+
+	string: 	[boop, 4thing, 54fdsj67, #446f67]
+
+
+--- PARSING ---
+
+The 'JSONParseDepth' function shall go through each element at a certain depth
+using the 'SkipToken' function to skip over any deeper tokens
+
+--- REFERENCE FUNCTIONS ---
+
+Using 'JSONSetTypeFunc' you can set functions to be called when a certain token is found during the next call of 'JSONParseDepth'
+
+The function pointer is as follows:
+	void (*JSONTypeFunc)(JSONState *json, unsigned int token);
+
+When these functions are called they can set up their own token functions once again using 'JSONSetTypeFunc' and then calling 'JSONParseDepth'
+This time, json.depth will be +1 since we are 1 token deeper in the json tree
+
+If you do not need to call a sub function for a token, you can use 'GetTokenHash' along with a dictionary of the tokens you wish to interact with
+
+Example:
+
+	char *dict[] = {
+		"a",
+		"b",
+		"c",
+		"d",
+		NULL,
+	};
+
+	void TokenFunc(JSONState *json, unsigned int token){
+		switch(GetTokenHash(json, token, dict)){
+			case 1: // a
+				break;
+			case 2: // b
+				break;
+			case 3: // c
+				break;
+			default: // Anything else
+				break;
+		}
+	}
+	
+- dicts passed to 'GetTokenHash' should have a terminating 'NULL' similar to null terminating strings
+
+Alternatively if you dont want seperate functions for all tokens, you can pass 'NULL' as the token string to 'JSONSetTypeFunc' along with a function to set it as the default function for unknown tokens.
+The default function can be used in tandem with other token types and will only be called for unknown tokens
+
+Example:
+
+	void tfunc_a(JSONState *json, unsigned int token){
+		...
+	}
+	
+	void tfunc_default(JSONState *json, unsigned int token){
+		...
+	}
+
+	int main(){
+		...
+		
+		JSONSetTypeFunc(&state, "a", tfunc_a);
+		JSONSetTypeFunc(&state, NULL, tfunc_default);
+		JSONParseDepth(&state);
+		
+		...
+	}
+	
+- 'tfunc_default' will only be called if the token parsed by 'JSONParseDepth' is not "a"
+
+Under the hood, the json.depth variable will be used to discern the y position in a 2d array which contains the names and function pointers (JSONFuncObject**) set by 'JSONSetTypeFunc'
+
+- Once 'JSONParseDepth' has finished executing json.depth will be the same as when it began.
+
+The json.depth is equivalent to how deeply the current token is nested

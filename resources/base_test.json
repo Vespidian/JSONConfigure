@@ -1,0 +1,29 @@
+{
+	attribute: {
+		"param1": 5,
+		param2: 45.35406,
+		properties: [
+			false, down, normal,
+		],
+		"param3": {
+			branch: {
+				thing1,
+				thing2,
+				thing3,
+				thing4,
+			},
+			a:1,
+			b:4.5,
+			c:false,
+		}
+	},
+	booleans: false,
+	properties: [
+		active, dynamic, 3, 5.6, "something unknown", 
+	],
+	attribute: {
+		param2: 32.16,
+	},
+	random: 19,
+}
+

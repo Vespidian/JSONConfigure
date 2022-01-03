@@ -1,0 +1,6 @@
+{
+	int : 4,
+	float : 3.0f,
+	array_float : [8.6, 3.1415, 1.615],
+	array_int : ["stroing", 34.342, 75, false],
+}
