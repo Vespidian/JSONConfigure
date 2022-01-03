@@ -4,11 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "json_utils.h"
-
 #include "json_base.h"
-
-#include <jsmn.h>
 
 typedef struct JSONFuncObject{
 	bool is_null;
@@ -284,17 +280,17 @@ static void FreeFuncDepth(JSONState *json, unsigned int depth){
 	}
 }
 
-static void PrintToken(JSONState *json, unsigned int token){
-	char *str = malloc(JSONTokenLength(json, token) + 1);
-	memcpy(str, json->json_string + json->tokens[token].start, JSONTokenLength(json, token));
-	str[JSONTokenLength(json, token)] = 0;
+// static void PrintToken(JSONState *json, unsigned int token){
+// 	char *str = malloc(JSONTokenLength(json, token) + 1);
+// 	memcpy(str, json->json_string + json->tokens[token].start, JSONTokenLength(json, token));
+// 	str[JSONTokenLength(json, token)] = 0;
 
-	// strupr(str);
+// 	// strupr(str);
 
-	// printf("%s:{", str);
-	free(str);
-	str = NULL;
-}
+// 	// printf("%s:{", str);
+// 	free(str);
+// 	str = NULL;
+// }
 
 void JSONParse(JSONState *json){
 	if(json->is_loaded && json != NULL){
