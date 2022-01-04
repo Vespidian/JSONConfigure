@@ -1,0 +1,20 @@
+{
+	objects: {
+		{
+			name: "Bouncy Ball",
+			tags: ["bouncy", "green", "fun"],
+		},
+		{
+			name: "Mirror",
+			tags: ["reflective", "silver", "useful"],
+		},
+		{
+			name: "Paper",
+			tags: ["white", "flappy", "writeable"],
+		},
+		{
+			name: "Desk",
+			tags: ["wooden", "hard", "flat surface"],
+		},
+	}
+}
