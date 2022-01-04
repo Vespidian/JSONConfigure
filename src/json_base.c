@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include <jsmn.h>
+
 #include "json_base.h"
 
 typedef struct JSONFuncObject{
@@ -11,6 +13,9 @@ typedef struct JSONFuncObject{
 	char *name;
 	JSONTokenFunc function;
 }JSONFuncObject;
+
+// If enabled, will cause the library to print things for debugging purposes
+// #define JSON_DEBUG
 
 /* --- ERROR CHECKING SETUP --- */
 // By default we simply print out errors to stdout
@@ -134,7 +139,9 @@ JSONState JSONOpen(char *path){
 		Error("%s: error reading length of JSON file", path);
 		goto exit_error;
 	}
-	// printf("file length: %ld\n", file_length);
+	#ifdef JSON_DEBUG
+		printf("file length: %ld\n", file_length);
+	#endif
 	json.json_string = malloc(file_length + 1);
 	if(json.json_string == NULL){
 		Error("%s: error: Could not allocate space for JSON file string", json.path);
@@ -262,8 +269,9 @@ void JSONSetTokenFunc(JSONState *json, char *type, JSONTokenFunc func_ptr){
 				}else{
 					Error("%s: error: Could not allocate space for a new json token type\n");
 				}
-
-				// printf("Set function for type: '%s'\n", type);
+				#ifdef JSON_DEBUG
+					printf("Set function for type: '%s'\n", type);
+				#endif
 			}
 		}
 	}
@@ -280,17 +288,18 @@ static void FreeFuncDepth(JSONState *json, unsigned int depth){
 	}
 }
 
-// static void PrintToken(JSONState *json, unsigned int token){
-// 	char *str = malloc(JSONTokenLength(json, token) + 1);
-// 	memcpy(str, json->json_string + json->tokens[token].start, JSONTokenLength(json, token));
-// 	str[JSONTokenLength(json, token)] = 0;
+void JSONPrint(JSONState *json, unsigned int token){
+	if(json != NULL){
+		char *str = malloc(JSONTokenLength(json, token) + 1);
+		memcpy(str, json->json_string + json->tokens[token].start, JSONTokenLength(json, token));
+		str[JSONTokenLength(json, token)] = 0;
 
-// 	// strupr(str);
+		printf("%s", str);
 
-// 	// printf("%s:{", str);
-// 	free(str);
-// 	str = NULL;
-// }
+		free(str);
+		str = NULL;
+	}
+}
 
 void JSONParse(JSONState *json){
 	if(json->is_loaded && json != NULL){
@@ -333,33 +342,43 @@ void JSONParse(JSONState *json){
 			}
 			int current_token = json->current_token;
 			for(int i = 0; i < num_objects; i++){
-				// for(int t = 0; t < json->depth; t++){
-				// 	printf("	");
-				// }
-				// PrintToken(json, current_token);
-				// if(json->tokens[current_token+1].size >= 2){
-				// 	printf("\n");
-				// }
+				#ifdef JSON_DEBUG
+					for(int t = 0; t < json->depth; t++){
+						printf("	");
+					}
+					PrintToken(json, current_token);
+					if(json->tokens[current_token+1].size >= 2){
+						printf("\n");
+					}
+				#endif
 				for(int j = 1; j < num_funcs_at_depth; j++){
 					if(CompareToken(json, current_token, json->funcs[json->depth - 1][j].name)){
-						// Go through each object nested in the current token and pass that token to the function
-						if(json->tokens[current_token].type == JSMN_ARRAY || json->tokens[current_token].type == JSMN_OBJECT){
-								json->current_token = current_token + 2;
-								json->funcs[json->depth - 1][j].function(json, current_token);
+						// Call the function corresponding to this token (if there exists one)
+						if(json->tokens[current_token].type == JSMN_OBJECT || json->tokens[current_token].type == JSMN_ARRAY){
+							json->current_token = current_token + 1;
+						}else{
+							json->current_token = current_token + 2;
 						}
+						json->funcs[json->depth - 1][j].function(json, current_token);
 						break;
 					}
 				}
 				if(num_funcs_at_depth == 1 && !json->funcs[json->depth - 1][0].is_null){ // Call the default function if its the only function
-					json->current_token = current_token + 2;
+						if(json->tokens[current_token].type == JSMN_OBJECT || json->tokens[current_token].type == JSMN_ARRAY){
+							json->current_token = current_token + 1;
+						}else{
+							json->current_token = current_token + 2;
+						}
 					json->funcs[json->depth - 1][0].function(json, current_token);
 				}
-				// if(json->tokens[current_token+1].size >= 2){
-				// 	for(int t = 0; t < json->depth; t++){
-				// 		printf("	");
-				// 	}
-				// }
-				// printf("}\n");
+				#ifdef JSON_DEBUG
+					if(json->tokens[current_token+1].size >= 2){
+						for(int t = 0; t < json->depth; t++){
+							printf("	");
+						}
+					}
+					printf("}\n");
+				#endif
 
 				// Jump to the next token at the current depth
 				if(current_token != json->num_tokens){

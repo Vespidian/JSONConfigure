@@ -34,7 +34,7 @@ typedef struct JSONState{
 	// Internal
 	char *json_string;
 
-	// Internal
+	// Raw token data from JASMINE
 	jsmntok_t *tokens;
 
 	// Internal
@@ -69,7 +69,6 @@ typedef struct JSONToken{
 }JSONToken;
 
 
-// void Error(const char *msg, ...);
 /** --- Error Checking --- */
 
 /**
@@ -104,7 +103,6 @@ int JSONTokenHash(JSONState *json, unsigned int token, char **dict);
 
 /**
  *  @brief Get the value of a token
- *  brief JSONToken.value.string should be copied if you want to use it later, as calling 'JSONFree' will free the string
  *  @param json - pointer to the 'JSONState' your token is in
  *  @param token - ID of your token
  *  @return A struct containing the type of the token and a union containing the value
@@ -145,5 +143,10 @@ void JSONParse(JSONState *json);
  *  @param json - Pointer to JSONState to be freed
  */
 void JSONFree(JSONState *json);
+
+/**
+ *  @brief Utility function that prints out the specified token
+ */
+void JSONPrint(JSONState *json, unsigned int token);
 
 #endif
