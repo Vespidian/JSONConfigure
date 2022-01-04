@@ -1,7 +1,7 @@
 # JSONConfigure
 Simple, quick, and easy JSON Library for reading any JSON files
 
-#### [Example Usage](examples/example.c)
+#### [Example Usage](src/tests/example.c) - See also [all the test files](src/tests/)
 
 #### Notes
 - When using strings returned by 'JSONTokenValue' (JSONToken.value._string) make sure you copy them if you plan to use them after freeing the 'JSONState' from which you generated them
