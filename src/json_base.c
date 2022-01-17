@@ -484,7 +484,7 @@ JSONToken JSONTokenValue(JSONState *json, unsigned int token){
 				json->parsed_strings = tmp;
 				json->parsed_strings[json->num_strings] = malloc(token_string_length);
 				if(json->parsed_strings[json->num_strings] != NULL){
-					strncpy(json->parsed_strings[json->num_strings], token_string, token_string_length);
+					strncpy(json->parsed_strings[json->num_strings], token_string, token_string_length - 1);
 					json->parsed_strings[json->num_strings][token_string_length - 1] = 0;
 					token_object.value._string = json->parsed_strings[json->num_strings];
 				}else{

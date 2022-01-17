@@ -7,5 +7,6 @@ void no_setup_test();
 void label_test();
 void example_test();
 void tag_test();
+void string_test();
 
 #endif
