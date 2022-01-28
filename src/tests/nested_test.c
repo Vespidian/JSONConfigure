@@ -16,7 +16,7 @@ static void tfunc0_nest(JSONState *json, unsigned int token){
 		default:;
 			JSONToken token_value = JSONTokenValue(json, token + 1);
 			if(token_value.type == JSON_INT){
-				printf("\nWOO: %d\n", token_value.value._int);
+				printf("\nWOO: %d\n", token_value._int);
 			}else{
 				printf("\nAWW\n");
 			}

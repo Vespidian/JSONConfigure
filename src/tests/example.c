@@ -45,7 +45,7 @@ static void tfunc_menu(JSONState *json, unsigned int token){
 		case 0:; // id (int, float, bool)
 			JSONToken id = JSONTokenValue(json, token + 1); // Get the value of the token (token + 1)
 			if(id.type == JSON_INT){ // Make sure the type is what we think it is
-				// id.value._int; // Do whatever with it..
+				// id._int; // Do whatever with it..
 			}
 			break;
 		case 1: // popup (nested items)
@@ -60,13 +60,16 @@ static void tfunc_menu(JSONState *json, unsigned int token){
 			JSONToken text = JSONTokenValue(json, token + 1); // Get the value of the token (token + 1)
 			if(text.type == JSON_STRING){ // Make sure the type is what we think it is
 				{ // Copy the string into our own string if we intend to use it after the current 'JSONState' gets freed
-					char *string = malloc(strlen(text.value._string) + 1);
-					strcpy(string, text.value._string);
-					string[strlen(text.value._string)] = 0;
+					char *string = malloc(strlen(text._string) + 1);
+					strcpy(string, text._string);
+					string[strlen(text._string)] = 0;
+
+					//Dont forget to eventually free
+					free(string);
 				}
 				// OR
 				{ // Simply use it temporarily (not keeping any pointers to it after 'JSONState' is freed)
-					printf("%s\n", text.value._string);
+					printf("%s\n", text._string);
 				}
 			}
 			break;

@@ -5,8 +5,10 @@
 	#define bool _Bool
 #endif
 
-#define JSMN_HEADER
-#include <jsmn.h>
+#ifndef JSMN_HEADER
+	#define JSMN_HEADER
+	#include <jsmn.h>
+#endif
 
 typedef struct JSONFuncObject JSONFuncObject;
 
@@ -28,16 +30,16 @@ typedef struct JSONState{
 
 	// Strings parsed by 'JSONTokenValue' function are stored here (Internal)
 	char **parsed_strings;
-	// Internal
+	// Number of strings stored using 'JSONTokenValue'
 	unsigned int num_strings;
 
-	// Internal
+	// The source string containing raw json data
 	char *json_string;
 
 	// Raw token data from JASMINE
 	jsmntok_t *tokens;
 
-	// Internal
+	// Number of tokens found by JASMINE
 	int num_tokens;
 
 	// Internal
@@ -59,13 +61,11 @@ typedef struct JSONToken{
 	// The type of the token (int, float, string, ..)
 	JSONConvertTypes type;
 	
-	// The actual value of the token (only the one specified by 'type' should be accessed)
-	union{
-		bool _bool;
-		int _int;
-		float _float;
-		char *_string;
-	}value;
+	// The actual value of the token
+	bool _bool;
+	int _int;
+	float _float;
+	char *_string;
 }JSONToken;
 
 
@@ -126,11 +126,24 @@ typedef void (*JSONTokenFunc)(JSONState *json, unsigned int token);
 void JSONSetTokenFunc(JSONState *json, char *type, JSONTokenFunc func_ptr);
 
 /**
+ *  @return An empty JSONState initialized with default values
+ */
+JSONState JSONNew();
+
+/**
  *  @brief Open, read, and tokenize the specified file
  *  @param path - Path to file to be read
  *  @return A JSONState ready to be passed to 'JSONSetTokenFunc' and 'JSONParse'
  */
 JSONState JSONOpen(char *path);
+
+/**
+ *  @brief tokenize the string as raw json data
+ *  @param string source string
+ *  @param path useful for debugging (give your strings a name), mostly used by 'JSONOpen'
+ *  @return A JSONState ready to be passed to 'JSONSetTokenFunc' and 'JSONParse'
+ */
+JSONState JSONRead(char *string, char *path);
 
 /**
  *  @brief Loop through tokens only at the current depth and call any 'JSONTokenFunc' that have been set

@@ -43,7 +43,7 @@ static void tfunc0_properties(JSONState *json, unsigned int token){
 	// PrintToken(json, token);
 	// printf("type: %d\n", JSONTokenValue(json, token).type);
 	if(JSONTokenValue(json, token).type == JSON_STRING){
-	printf("VALUE!!!!!!: %s\n", JSONTokenValue(json, token).value._string);
+	printf("VALUE!!!!!!: %s\n", JSONTokenValue(json, token)._string);
 
 	}
 }
@@ -65,7 +65,7 @@ static void tfunc0_attribute(JSONState *json, unsigned int token){ // Called for
 		case 1:; // param2
 			JSONToken token_value = JSONTokenValue(json, token + 1);
 			if(token_value.type == JSON_FLOAT){
-				// printf("%f * 2 = %f\n", token_value._float, token_value._float * 2);
+				// printf("%f * 2 = %f\n", token__float, token__float * 2);
 			}
 			// printf("%d\n", token_value.type);
 			// printf("PARAM2\n");
@@ -118,4 +118,14 @@ void base_test(){
 	JSONSetTokenFunc(&json_state, NULL, tfunc0_default);
 	JSONParse(&json_state);
 	JSONFree(&json_state);
+}
+
+
+char json_string[] = "{attribute:{\"param1\":5,param2:45.35406,properties:[false,down,normal],\"param3\":{branch:{thing1,thing2,thing3,thing4},a:1,b:4.5,c:false}},booleans:false,properties:[active,dynamic,3,5.6,\"something unknown\"],attribute:{param2:32.16},random:19}";
+void base_test_string(){
+	JSONState json = JSONRead(json_string, NULL);
+
+	JSONSetTokenFunc(&json, NULL, tfunc0_default);
+	JSONParse(&json);
+	JSONFree(&json);
 }
