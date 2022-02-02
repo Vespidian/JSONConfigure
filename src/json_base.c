@@ -494,30 +494,34 @@ JSONToken JSONTokenValue(JSONState *json, unsigned int token){
 				// Boolean
 				is_bool = true;
 
-			}else if(JSONTokenLength(json, token) <= 46){ // 46 characters is the longest a float can be
-				char *str = json->json_string;
-				for(int i = json->tokens[token].start; i < json->tokens[token].end; i++){
-					if(!is_string){
-						if(str[i] == '.'){
-							if(is_float){ // Can only be a float if there is a single decimal point '.'
+			}else{
+				if(JSONTokenLength(json, token) <= 46){ // 46 characters is the longest a float can be
+					char *str = json->json_string;
+					for(int i = json->tokens[token].start; i < json->tokens[token].end; i++){
+						if(!is_string){
+							if(str[i] == '.'){
+								if(is_float){ // Can only be a float if there is a single decimal point '.'
+									is_float = false;
+									is_string = true;
+									break;
+								}else{
+									// Float
+									is_float = true;
+								}
+							}else if(!(str[i] <= '9' && str[i] >= '0')){
+								// String
 								is_float = false;
 								is_string = true;
 								break;
-							}else{
-								// Float
-								is_float = true;
 							}
-						}else if(!(str[i] <= '9' && str[i] >= '0')){
-							// String
-							is_float = false;
-							is_string = true;
-							break;
 						}
 					}
-				}
-				if(!is_string && !is_float){
-					// Int
-					is_int = true;
+					if(!is_string && !is_float){
+						// Int
+						is_int = true;
+					}
+				}else{
+					is_string = true;
 				}
 			}
 
