@@ -494,7 +494,7 @@ JSONToken JSONTokenValue(JSONState *json, unsigned int token){
 				// Boolean
 				is_bool = true;
 
-			}else{
+			}else if(JSONTokenLength(json, token) <= 46){ // 46 characters is the longest a float can be
 				char *str = json->json_string;
 				for(int i = json->tokens[token].start; i < json->tokens[token].end; i++){
 					if(!is_string){
