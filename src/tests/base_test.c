@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "../json_base.h"
 
 static char *param3_hash[] = {
@@ -70,7 +72,12 @@ static void tfunc0_attribute(JSONState *json, unsigned int token){ // Called for
 			// printf("%d\n", token_value.type);
 			// printf("PARAM2\n");
 			break;
-		case 2: // properties
+		case 2:; // properties
+			char *str = NULL;
+			JSONTokenToString(json, token + 1, &str);
+			printf("++++ STR: '%s' ++++\n", str);
+			free(str);
+			
 			JSONSetTokenFunc(json, NULL, tfunc0_properties);
 			JSONParse(json);
 			break;
@@ -96,8 +103,13 @@ static char *root_dict[] = {
 static void tfunc0_default(JSONState *json, unsigned int token){
 	// printf("Default function!\n");
 	switch(JSONTokenHash(json, token, root_dict)){
-		case 0: // properties
+		case 0:; // properties
 		// json->current_token++;
+			char *str = NULL;
+			JSONTokenToString(json, token + 1, &str);
+			printf("++++ STR: '%s' ++++\n", str);
+			free(str);
+
 			JSONSetTokenFunc(json, NULL, tfunc0_properties);
 			JSONParse(json);
 			break;

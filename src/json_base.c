@@ -590,3 +590,15 @@ JSONToken JSONTokenValue(JSONState *json, unsigned int token){
 		return (JSONToken){JSON_UNDEFINED};
 	}
 }
+
+void JSONTokenToString(JSONState *json, unsigned int token, char **dest){
+	if(json != NULL){
+		if(*dest == NULL){
+			*dest = malloc(JSONTokenLength(json, token) + 1);
+			memcpy(*dest, json->json_string + json->tokens[token].start, JSONTokenLength(json, token));
+			*(*dest + JSONTokenLength(json, token)) = 0;
+		}else{
+			Error("%s: error: 'dest' string passed to 'JSONTokenToString' must be initialized to NULL", json->path);
+		}
+	}
+}

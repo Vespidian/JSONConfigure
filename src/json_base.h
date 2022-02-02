@@ -162,4 +162,10 @@ void JSONFree(JSONState *json);
  */
 void JSONPrint(JSONState *json, unsigned int token);
 
+/**
+ *  @brief Utility function to copy a token to a string
+ *  @param dest NULL initialized non allocated char pointer to be allocated with the token string (ie: char *d = NULL;)
+ */
+void JSONTokenToString(JSONState *json, unsigned int token, char **dest);
+
 #endif
