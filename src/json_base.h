@@ -60,7 +60,6 @@ typedef struct JSONToken{
 	bool _bool;
 	int _int;
 	float _float;
-	char *_string;
 }JSONToken;
 
 

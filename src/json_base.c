@@ -524,7 +524,6 @@ JSONToken JSONTokenValue(JSONState *json, unsigned int token){
 		token_object._bool = false;
 		token_object._int = 0;
 		token_object._float = 0;
-		token_object._string = NULL;
 
 		char *token_string = json->json_string + json->tokens[token].start;
 		int token_string_length = JSONTokenLength(json, token) + 1;

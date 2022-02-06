@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "../json_base.h"
 
 static void tfunc_string(JSONState *json, unsigned int token){
@@ -7,6 +8,7 @@ static void tfunc_string(JSONState *json, unsigned int token){
 		char *string = NULL;
 		JSONTokenToString(json, token + 1, &string);
 		printf("%s\n", string);
+		free(string);
 	}
 }
 

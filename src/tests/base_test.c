@@ -45,8 +45,10 @@ static void tfunc0_properties(JSONState *json, unsigned int token){
 	// PrintToken(json, token);
 	// printf("type: %d\n", JSONTokenValue(json, token).type);
 	if(JSONTokenValue(json, token).type == JSON_STRING){
-	printf("VALUE!!!!!!: %s\n", JSONTokenValue(json, token)._string);
-
+		char *string = NULL;
+		JSONTokenToString(json, token, &string);
+		printf("VALUE!!!!!!: %s\n", string);
+		free(string);
 	}
 }
 

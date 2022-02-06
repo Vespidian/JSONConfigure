@@ -62,6 +62,7 @@ static void tfunc_menu(JSONState *json, unsigned int token){
 				char *string = NULL; // Make sure to initialize your char pointer to NULL before passing it to 'JSONTokenToString'
 				JSONTokenToString(json, token + 1, &string); // Remember that 'JSONTokenToString' mallocs the string, so you must eventually free it
 				printf("%s\n", string);
+				free(string);
 			}
 			break;
 		default: // Any other tokens
