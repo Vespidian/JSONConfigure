@@ -59,18 +59,9 @@ static void tfunc_menu(JSONState *json, unsigned int token){
 		case 3:; // text (string)
 			JSONToken text = JSONTokenValue(json, token + 1); // Get the value of the token (token + 1)
 			if(text.type == JSON_STRING){ // Make sure the type is what we think it is
-				{ // Copy the string into our own string if we intend to use it after the current 'JSONState' gets freed
-					char *string = malloc(strlen(text._string) + 1);
-					strcpy(string, text._string);
-					string[strlen(text._string)] = 0;
-
-					//Dont forget to eventually free
-					free(string);
-				}
-				// OR
-				{ // Simply use it temporarily (not keeping any pointers to it after 'JSONState' is freed)
-					printf("%s\n", text._string);
-				}
+				char *string = NULL; // Make sure to initialize your char pointer to NULL before passing it to 'JSONTokenToString'
+				JSONTokenToString(json, token + 1, &string); // Remember that 'JSONTokenToString' mallocs the string, so you must eventually free it
+				printf("%s\n", string);
 			}
 			break;
 		default: // Any other tokens

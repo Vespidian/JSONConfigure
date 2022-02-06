@@ -4,7 +4,9 @@
 static void tfunc_string(JSONState *json, unsigned int token){
 	JSONToken str_token = JSONTokenValue(json, token + 1);
 	if(str_token.type == JSON_STRING){
-		printf("%s\n", str_token._string);
+		char *string = NULL;
+		JSONTokenToString(json, token + 1, &string);
+		printf("%s\n", string);
 	}
 }
 

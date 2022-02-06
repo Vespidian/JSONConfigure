@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Werror -Wall -g
+CFLAGS = -Werror -Wall -g -pg
 DISABLE_FLAGS = -Wno-missing-braces
 
 INCLUDE = -isystem ../include -L../lib
