@@ -202,7 +202,7 @@ JSONState JSONRead(char *string, char *path){
 			json.current_token = 1;
 
 		}else{
-			Error("%s: error: The entire JSON file must be surrounded by {} to be valid", path);
+			Error("%s: error: The entire JSON file must be surrounded by {} to be valid\n", path);
 			exit_error:
 			json.is_loaded = false;
 			free(json.path);
@@ -210,6 +210,9 @@ JSONState JSONRead(char *string, char *path){
 			
 			free(json.json_string);
 			json.json_string = NULL;
+			
+			free(json.tokens);
+			json.tokens = NULL;
 		}
 
 	}
