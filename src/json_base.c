@@ -330,7 +330,9 @@ int CountFuncs(JSONState *json, unsigned int depth){
 static void FreeFuncDepth(JSONState *json, unsigned int depth){
 	if(json != NULL){
 		if(json->is_loaded && json->depth <= depth){
-			printf("%d functions at depth '%d'\n", CountFuncs(json, depth), depth);
+			#ifdef JSON_DEBUG
+				printf("%d functions at depth '%d'\n", CountFuncs(json, depth), depth);
+			#endif
 			for(int i = 1; !json->funcs[depth][i].is_null; i++){
 				free(json->funcs[depth][i].name); // LEAK
 				json->funcs[depth][i].name = NULL;
